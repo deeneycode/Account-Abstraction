@@ -19,15 +19,15 @@ contract MinimalAccount is IAccount, Ownable {
 
     IEntryPoint private immutable i_entryPoint;
 
-    modifier requireFromEntryPoint(){
-        if(msg.sender != address(i_entryPoint)){
+    modifier requireFromEntryPoint() {
+        if (msg.sender != address(i_entryPoint)) {
             revert MinimalAccount__NotFromEntryPoint();
         }
         _;
     }
 
-    modifier requireFromEntryPointAndOwner(){
-        if(msg.sender != address(i_entryPoint) && msg.sender != owner()){
+    modifier requireFromEntryPointAndOwner() {
+        if (msg.sender != address(i_entryPoint) && msg.sender != owner()) {
             revert MinimalAccount__NotFromEntryPointAndOwner();
         }
         _;
@@ -36,9 +36,12 @@ contract MinimalAccount is IAccount, Ownable {
     constructor(address entryPoint) Ownable(msg.sender) {
         i_entryPoint = IEntryPoint(entryPoint);
     }
+
     receive() external payable {}
 
-    /**External Funtions */
+    /**
+     * External Funtions
+     */
     // A signature is valid, if it is MinimalAccount
     function validateUserOp(PackedUserOperation calldata userOp, bytes32 userOpHash, uint256 missingAccountFunds)
         external
@@ -49,18 +52,16 @@ contract MinimalAccount is IAccount, Ownable {
         _payPreFund(missingAccountFunds);
     }
 
-    function execute(address to, uint256 value, bytes calldata functionData) 
-    external 
-    requireFromEntryPointAndOwner
-    {
+    function execute(address to, uint256 value, bytes calldata functionData) external requireFromEntryPointAndOwner {
         (bool success, bytes memory result) = to.call{value: value}(functionData);
-        if(!success){
+        if (!success) {
             revert MinimalAccount__CallFailed(result);
-        } 
+        }
     }
 
-
-    /** Internal Functions */
+    /**
+     * Internal Functions
+     */
     function _validateSignature(PackedUserOperation calldata userOp, bytes32 userOpHash)
         internal
         view
@@ -81,8 +82,10 @@ contract MinimalAccount is IAccount, Ownable {
         }
     }
 
-    /** Getters function */
-    function getIEntryPoint() external view returns(IEntryPoint){
+    /**
+     * Getters function
+     */
+    function getIEntryPoint() external view returns (IEntryPoint) {
         return i_entryPoint;
     }
 }
