@@ -23,7 +23,7 @@ contract HelperConfig is Script {
     address constant BURNER_WALLET = 0x6C38b0767659E583064E797316E26B342591fddB;
     // to get the foundry default wallet address check base.sol
     address constant FOUNDRY_DEFAULT_WALLET = 0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38;
-    address constant ANVIL_DEFAULT_KEY = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    address constant ANVIL_DEFAULT_ACCOUNT = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     NetworkConfig public localNetworkConfig;
 
     mapping(uint256 chainId => NetworkConfig) public networkConfigs;
@@ -61,11 +61,11 @@ contract HelperConfig is Script {
         }
         // Deploy mocks
         console2.log("Deploying mocks.. ");
-        vm.startBroadcast(ANVIL_DEFAULT_KEY);
+        vm.startBroadcast(ANVIL_DEFAULT_ACCOUNT);
         entryPoint = new EntryPoint();
         vm.stopBroadcast();
 
-        localNetworkConfig = NetworkConfig({entryPoint: address(entryPoint), account: ANVIL_DEFAULT_KEY});
+        localNetworkConfig = NetworkConfig({entryPoint: address(entryPoint), account: ANVIL_DEFAULT_ACCOUNT});
         return localNetworkConfig;
 
         // return NetworkConfig({entryPoint: address(0), account: FOUNDRY_DEFAULT_WALLET});
